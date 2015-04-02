@@ -80,132 +80,7 @@ namespace UGWProject
         PhysicalState paulPCurrent = PhysicalState.PaulFaceRight;//default
         //sprite in the ghost state will only be one state, so there does not need to be an enum for it.
 
-        public void LoadLevels()
-        {
-             
-
-            //lFiles = Directory.GetFiles(@".", "*level*");
-           
-            // if (lFiles.Length == 0)
-            // {
-            //      Write "no levels found" somewhere
-            // }
-            string filenm = "level.txt";
-            StreamReader lRead = new StreamReader(filenm);
-
-            string text = "";
-
-            while ((text = lread.ReadLine()) != null)
-            {
-                string[] words = text.Split(',');
-                mapX = int.Parse(words[0]);
-                mapY = int.Parse(words[1]);
-                spriteBatch.Draw(deadlyObjs, new Rectangle(mapX, mapY, 50, 50), Color.White);
-            }
-        }
-
-
-
-
-
-
-
-
-
-                /*/
-
-                string lvl = " "; //empty string
-                string lvlIn = " "; //String being read
-                string lCheck = " "; //Tells when reader should stop reading
-                mapX = 42;
-
-                while ((lvlIn = lRead.ReadLine()) != null)
-                {
-
-                    //Check for characters
-                    foreach (char c in lvlIn)
-                    {
-                        if (c == '@')
-                        {
-                            // Player paul = new Player(new Microsoft.Xna.Framework.Rectangle(mapX,mapY,64,64),)
-                        }
-
-                        if (c == 'g')
-                        {
-                            spriteBatch.Draw(floor, floorrect, Color.White);
-                        }
-
-                        if (c == 'f')
-                        {
-                            //create floaty block at location
-                        }
-
-                        if (c == 'd')
-                        {
-                            //create deadly block here
-                        }
-
-                        if (c == '|')
-                        {
-                            //Create wall at location
-                        }
-
-                        if (c == 'x')
-                        {
-                            //Create switch at location
-                        }
-
-                        if (c == 'e')
-                        {
-                            //create enemy type 1
-                        }
-
-                        if (c == 'E')
-                        {
-                            //create enemy type 2
-                        }
-
-                        if (c == 'z')
-                        {
-                            //create enemy type 3
-                        }
-
-                        if (c == 'Z')
-                        {
-                            //create enemy type 4
-                        }
-
-                        if (c == 'n')
-                        {
-                            //mapY += particular amount;
-                            //mapX = 42;
-
-
-                            lvl += lvlIn + "\n";
-
-                        }
-                        //Window Dimensions: 1024 x 768
-                        //mapX += 54;
-                        //
-
-
-                    }
-
-                    if ((lCheck = lRead.ReadLine()) == null) //Checks to see if file has anymore text on the line
-                    {
-                        levels.Add(1, lvl); //When done, add the zombie to the list
-
-                        lRead.Close(); //Closes document for this iteration
-                    }
-
-
-                }
-
-
-            }
-        }
-
-*/
+       
         public Game1()
             : base()
         {
@@ -261,6 +136,135 @@ namespace UGWProject
 
             base.Initialize();
         }
+
+        public void LoadLevels()
+        {
+
+
+            //lFiles = Directory.GetFiles(@".", "*level*");
+
+            // if (lFiles.Length == 0)
+            // {
+            //      Write "no levels found" somewhere
+            // }
+            string filenm = "level.txt";
+            StreamReader lRead = new StreamReader(filenm);
+
+            string text = "";
+
+            while ((text = lRead.ReadLine()) != null)
+            {
+                string[] words = text.Split(',');
+                mapX = int.Parse(words[0]);
+                mapY = int.Parse(words[1]);
+                spriteBatch.Draw(deadlyObjs, new Rectangle(mapX, mapY, 50, 50), Color.White);
+            }
+
+            
+        }
+
+
+
+
+
+
+
+
+
+        /*/
+
+        string lvl = " "; //empty string
+        string lvlIn = " "; //String being read
+        string lCheck = " "; //Tells when reader should stop reading
+        mapX = 42;
+
+        while ((lvlIn = lRead.ReadLine()) != null)
+        {
+
+            //Check for characters
+            foreach (char c in lvlIn)
+            {
+                if (c == '@')
+                {
+                    // Player paul = new Player(new Microsoft.Xna.Framework.Rectangle(mapX,mapY,64,64),)
+                }
+
+                if (c == 'g')
+                {
+                    spriteBatch.Draw(floor, floorrect, Color.White);
+                }
+
+                if (c == 'f')
+                {
+                    //create floaty block at location
+                }
+
+                if (c == 'd')
+                {
+                    //create deadly block here
+                }
+
+                if (c == '|')
+                {
+                    //Create wall at location
+                }
+
+                if (c == 'x')
+                {
+                    //Create switch at location
+                }
+
+                if (c == 'e')
+                {
+                    //create enemy type 1
+                }
+
+                if (c == 'E')
+                {
+                    //create enemy type 2
+                }
+
+                if (c == 'z')
+                {
+                    //create enemy type 3
+                }
+
+                if (c == 'Z')
+                {
+                    //create enemy type 4
+                }
+
+                if (c == 'n')
+                {
+                    //mapY += particular amount;
+                    //mapX = 42;
+
+
+                    lvl += lvlIn + "\n";
+
+                }
+                //Window Dimensions: 1024 x 768
+                //mapX += 54;
+                //
+
+
+            }
+
+            if ((lCheck = lRead.ReadLine()) == null) //Checks to see if file has anymore text on the line
+            {
+                levels.Add(1, lvl); //When done, add the zombie to the list
+
+                lRead.Close(); //Closes document for this iteration
+            }
+
+
+        }
+
+
+    }
+}
+
+*/
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
