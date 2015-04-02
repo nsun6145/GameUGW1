@@ -27,8 +27,21 @@ namespace UGWProject
         Rectangle siderectL;
         Rectangle siderectR;
         Rectangle toprect;
+        GeneralBlock ceiling;
+        GeneralBlock sideL;
+        GeneralBlock sideR;
+        GeneralBlock ground;
+        Enemy enemy1;
+        Enemy enemy2;
+        Enemy enemy1ghost;
+        Enemy enemy2ghost;
+        Memories memory;
         int level;
 
+        private List<string> levels = new List<string>();
+        private string[] lFiles;
+        protected int mapX;
+        protected int mapY;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -37,7 +50,7 @@ namespace UGWProject
         //the paul and the memories will always stay no matter the change in level
         Texture2D paulPhysical;
         Texture2D paulGhost;
-        Texture2D memory;
+        Texture2D memorytexture;
         //the background will change
         Texture2D enemyPhysical1;
         Texture2D enemyPhysical2;
@@ -67,6 +80,132 @@ namespace UGWProject
         PhysicalState paulPCurrent = PhysicalState.PaulFaceRight;//default
         //sprite in the ghost state will only be one state, so there does not need to be an enum for it.
 
+        public void LoadLevels()
+        {
+             
+
+            //lFiles = Directory.GetFiles(@".", "*level*");
+           
+            // if (lFiles.Length == 0)
+            // {
+            //      Write "no levels found" somewhere
+            // }
+            string filenm = "level.txt";
+            StreamReader lRead = new StreamReader(filenm);
+
+            string text = "";
+
+            while ((text = lread.ReadLine()) != null)
+            {
+                string[] words = text.Split(',');
+                mapX = int.Parse(words[0]);
+                mapY = int.Parse(words[1]);
+                spriteBatch.Draw(deadlyObjs, new Rectangle(mapX, mapY, 50, 50), Color.White);
+            }
+        }
+
+
+
+
+
+
+
+
+
+                /*/
+
+                string lvl = " "; //empty string
+                string lvlIn = " "; //String being read
+                string lCheck = " "; //Tells when reader should stop reading
+                mapX = 42;
+
+                while ((lvlIn = lRead.ReadLine()) != null)
+                {
+
+                    //Check for characters
+                    foreach (char c in lvlIn)
+                    {
+                        if (c == '@')
+                        {
+                            // Player paul = new Player(new Microsoft.Xna.Framework.Rectangle(mapX,mapY,64,64),)
+                        }
+
+                        if (c == 'g')
+                        {
+                            spriteBatch.Draw(floor, floorrect, Color.White);
+                        }
+
+                        if (c == 'f')
+                        {
+                            //create floaty block at location
+                        }
+
+                        if (c == 'd')
+                        {
+                            //create deadly block here
+                        }
+
+                        if (c == '|')
+                        {
+                            //Create wall at location
+                        }
+
+                        if (c == 'x')
+                        {
+                            //Create switch at location
+                        }
+
+                        if (c == 'e')
+                        {
+                            //create enemy type 1
+                        }
+
+                        if (c == 'E')
+                        {
+                            //create enemy type 2
+                        }
+
+                        if (c == 'z')
+                        {
+                            //create enemy type 3
+                        }
+
+                        if (c == 'Z')
+                        {
+                            //create enemy type 4
+                        }
+
+                        if (c == 'n')
+                        {
+                            //mapY += particular amount;
+                            //mapX = 42;
+
+
+                            lvl += lvlIn + "\n";
+
+                        }
+                        //Window Dimensions: 1024 x 768
+                        //mapX += 54;
+                        //
+
+
+                    }
+
+                    if ((lCheck = lRead.ReadLine()) == null) //Checks to see if file has anymore text on the line
+                    {
+                        levels.Add(1, lvl); //When done, add the zombie to the list
+
+                        lRead.Close(); //Closes document for this iteration
+                    }
+
+
+                }
+
+
+            }
+        }
+
+*/
         public Game1()
             : base()
         {
@@ -78,6 +217,7 @@ namespace UGWProject
             level = 1;
 
             reader = new StreamReader("Textures.txt");
+         
 
         }
 
@@ -93,7 +233,8 @@ namespace UGWProject
 
 
             //each line represents each level
-            //[0] floor, [1] side borders, [2] top border, 
+            //[0] floor, [1] side borders, [2] top border,  [3]  enemy1ghost, [4]  enemy 2ghost,[5] enemy1phys, [6] enemy2phys
+            //[7] float1, [8] float2, [9] moving block, [10] transblock ghost [11] transblock physical
             if (level > 1)
             {
                 string[] lines = reader.ReadToEnd().Split(new char[] { '\n' });
@@ -111,11 +252,12 @@ namespace UGWProject
 
 
             reader.Close();
+            playerPos = new Vector2(300, 300);
+            toprect = new Rectangle(41, 0, 942, 40);
+            siderectL = new Rectangle(0, 0, 40, 942);
+            siderectR = new Rectangle(983, 0, 40, 942);
+            floorrect = new Rectangle(41, 730, 942, 40);
 
-            toprect = new Rectangle(41, 0, 942, 41);
-            siderectL = new Rectangle(0, 0, 41, 942);
-            siderectR = new Rectangle(983, 0, 41, 942);
-            floorrect = new Rectangle(41, 730, 942, 41);
 
             base.Initialize();
         }
@@ -130,13 +272,26 @@ namespace UGWProject
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            paulRect = new Rectangle(50, 50, 50, 50);//temp rect values, will replace with correct ones later
-            paulPlayer = new Player(paulRect, paulPhysical, playerPos, false);
 
+
+            paulPhysical = Content.Load<Texture2D>("paulstand1.png");
             floor = Content.Load<Texture2D>(textures[0]);
             sides = Content.Load<Texture2D>(textures[1]);
             top = Content.Load<Texture2D>(textures[2]);
-
+            enemyGhost1 = Content.Load<Texture2D>(textures[3]);
+            enemyGhost2 = Content.Load<Texture2D>(textures[4]);
+            enemyPhysical1 = Content.Load<Texture2D>(textures[5]);
+            enemyPhysical2 = Content.Load<Texture2D>(textures[6]);
+            phaseBlockTexture = Content.Load<Texture2D>(textures[10]);
+            moveBlockTexture = Content.Load<Texture2D>(textures[9]);
+            paulRect = new Rectangle(300, 300, paulPhysical.Width, paulPhysical.Height);
+            paulPlayer = new Player(paulRect, paulPhysical, playerPos, false);
+            ceiling = new GeneralBlock(toprect, top);
+            sideL = new GeneralBlock(siderectL, sides);
+            sideR = new GeneralBlock(siderectR, sides);
+            ground = new GeneralBlock(floorrect, floor);
+            deadlyObjs = Content.Load<Texture2D>("DeadlyBlockPhys.png");
+            paulGhost = Content.Load<Texture2D>("paulfloat.png");
         }
 
         /// <summary>
@@ -306,10 +461,29 @@ namespace UGWProject
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-            spriteBatch.Draw(floor, floorrect, Color.White);
-            spriteBatch.Draw(sides, siderectL, Color.White);
-            spriteBatch.Draw(sides, siderectR, Color.White);
-            spriteBatch.Draw(top, toprect, Color.White);
+            spriteBatch.Draw(ground.GameTexture, ground.ObjRect, Color.White);
+            spriteBatch.Draw(sideL.GameTexture, sideL.ObjRect, Color.White);
+            spriteBatch.Draw(sideR.GameTexture, sideR.ObjRect, Color.White);
+            spriteBatch.Draw(ceiling.GameTexture, ceiling.ObjRect, Color.White);
+            spriteBatch.Draw(paulPlayer.GameTexture, paulPlayer.ObjRect, Color.White);
+            LoadLevels();
+
+
+            if(paulPlayer.ObjRect.Bottom > ground.ObjRect.Y)
+            {
+                Rectangle temp = paulPlayer.ObjRect;
+                temp.Y = ground.ObjRect.Top + paulPlayer.ObjRect.Height;
+                paulPlayer.ObjRect = temp;
+                hasJumped = false;
+            }
+            if (paulPlayer.IsDead == true)
+            {
+                spriteBatch.Draw(paulGhost, paulPlayer.ObjRect, Color.White);
+            }
+            else { spriteBatch.Draw(paulPlayer.GameTexture, paulPlayer.ObjRect, Color.White); }
+
+
+
 
             spriteBatch.End();
             base.Draw(gameTime);
